@@ -19,7 +19,7 @@ public class VkParseCommand extends AbstractConsoleCommand {
 		List<File> folderFiles = VkParseManager.getFilesInFolder();
 		if (folderFiles.isEmpty()) return;
 
-		List<VkMessage> messages = VkParseManager.parseMessagesFromFiles(folderFiles);
+		List<VkMessage> messages = VkParseManager.getMessagesFromFiles(folderFiles);
 		VkParseManager.sendMessagesToChannel(messages);
 	}
 }

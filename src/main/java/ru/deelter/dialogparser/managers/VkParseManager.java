@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Unmodifiable;
 import ru.deelter.dialogparser.VkParserModule;
 import ru.deelter.dialogparser.utils.HtmlFileUtils;
 import ru.deelter.dialogparser.utils.VkMessage;
@@ -54,7 +55,7 @@ public class VkParseManager {
 		return files;
 	}
 
-	public static @NotNull List<VkMessage> parseMessagesFromFiles(@NotNull List<File> htmlFiles) {
+	public static @NotNull List<VkMessage> getMessagesFromFiles(@NotNull List<File> htmlFiles) {
 		int filesSize = htmlFiles.size();
 //		int total = filesSize * 50;
 		int counter = 1;
@@ -62,11 +63,15 @@ public class VkParseManager {
 			String name = file.getName();
 			String queueName = String.format("%s [%s/%s]", name, counter++, filesSize);
 			LOGGER.info("Process " + queueName);
-
-			List<VkMessage> messages = HtmlFileUtils.parseVkMessages(file);
-			LOGGER.info(String.format("Found %s messages in file %s%n", messages.size(), name));
-			return messages;
+			return getMessagesFromFile(file);
 		}
+		return Collections.emptyList();
+	}
+
+	public static @NotNull @Unmodifiable List<VkMessage> getMessagesFromFile(@NotNull File htmlFile) {
+		String name = htmlFile.getName();
+		List<VkMessage> messages = HtmlFileUtils.parseVkMessages(htmlFile);
+		LOGGER.info(String.format("Found %s messages in file %s%n", messages.size(), name));
 		return Collections.emptyList();
 	}
 
